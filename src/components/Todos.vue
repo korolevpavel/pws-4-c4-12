@@ -126,10 +126,7 @@ td {
 </style>
 
 <script>
-// import axios from 'axios';
 import Confirmation from './Confirmation.vue';
-
-// const dataURL = 'http://localhost:5000/api/tasks/';
 
 export default {
   name: 'Todo',
@@ -167,10 +164,8 @@ export default {
         const todos = Object.values(this.todos);
         for (let i = 0; i < todos.length; i += 1) {
           if (todos[i].is_completed !== undefined && todos[i].is_completed[0] === 'true') {
-            // console.log(todos[i].is_completed[0]);
             isDone += 1;
           } else {
-            // console.log(todos[i].is_completed);
             isDoing += 1;
           }
         }
@@ -179,8 +174,6 @@ export default {
       this.doing = isDoing;
     },
     getTodos() {
-      // axios.get(dataURL).then((response) => {
-      //   this.todos = response.data.tasks;
       if (localStorage.getItem('todos')) {
         try {
           this.todos = JSON.parse(localStorage.getItem('todos'));
@@ -199,15 +192,6 @@ export default {
     onSubmit(event) {
       event.preventDefault();
       this.$refs.addTodoModal.hide();
-      // const requestData = {
-      //   description: this.addTodoForm.description,
-      //   is_completed: this.addTodoForm.is_completed[0],
-      // };
-      // axios.post(dataURL, requestData).then(() => {
-      //   this.getTodos();
-      //   this.confirmationMessage = `Задача "${requestData.description}" добавлена`;
-      //   this.showConfirmation = true;
-      // });
 
       const { description } = this.addTodoForm;
       let uidNew = 0;
@@ -254,13 +238,6 @@ export default {
       this.updateTodoForm = todo;
     },
     deleteTodo(todo) {
-      // const todoURL = dataURL + todo.uid;
-      // axios.delete(todoURL)
-      //   .then(() => {
-      //     this.getTodos();
-      //     this.confirmationMessage = 'Задача удалена из списка';
-      //     this.showConfirmation = true;
-      //   });
       this.confirmationMessage = `Задача №${todo.uid} удалена из списка`;
       this.showConfirmation = true;
       const indexDelete = this.todos.findIndex(item => item.uid === todo.uid);
@@ -271,17 +248,6 @@ export default {
     onUpdateSubmit(event) {
       event.preventDefault();
       this.$refs.updateTodoModal.hide();
-      // const requestData = {
-      //   description: this.updateTodoForm.description,
-      //   is_completed: this.updateTodoForm.is_completed[0],
-      // };
-      // const todoURL = dataURL + this.updateTodoForm.uid;
-      // axios.put(todoURL, requestData)
-      //   .then(() => {
-      //     this.getTodos();
-      //     this.confirmationMessage = 'Задача обновлена';
-      //     this.showConfirmation = true;
-      //   });
       this.confirmationMessage = `Задача №${this.updateTodoForm.uid} обновлена`;
       this.showConfirmation = true;
       this.saveToLocalStorage();
