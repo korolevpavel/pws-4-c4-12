@@ -2,7 +2,10 @@
   <div class="container">
     <div class="col-sm-10">
       <h1>Задачи: сделано {{ done }} - ожидают {{ doing }}</h1>
-      <confirmation :message="confirmationMessage" v-if="showConfirmation"></confirmation>
+      <confirmation :message="confirmationMessage"
+        v-model="showConfirmation"
+        v-if="showConfirmation">
+      </confirmation>
       <div class="header-btn"><button
         type="button"
         id="task-add"
