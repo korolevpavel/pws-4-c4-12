@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="col-sm-10">
-      <h1>Задачи</h1>
+      <h1>Задачи: сделано {{ done }} - ожидают {{ doing }}</h1>
       <confirmation :message="confirmationMessage" v-if="showConfirmation"></confirmation>
       <div class="header-btn"><button
         type="button"
@@ -135,6 +135,8 @@ export default {
   name: 'Todo',
   data() {
     return {
+      done: 0,
+      doing: 0,
       todos: [],
       addTodoForm: {
         description: '',
@@ -156,6 +158,25 @@ export default {
     clearLocalStorage() {
       localStorage.removeItem('todos');
       this.todos = [];
+      this.updateStats();
+    },
+    updateStats() {
+      let isDone = 0;
+      let isDoing = 0;
+      if (this.todos.length > 0) {
+        const todos = Object.values(this.todos);
+        for (let i = 0; i < todos.length; i += 1) {
+          if (todos[i].is_completed !== undefined && todos[i].is_completed[0] === 'true') {
+            // console.log(todos[i].is_completed[0]);
+            isDone += 1;
+          } else {
+            // console.log(todos[i].is_completed);
+            isDoing += 1;
+          }
+        }
+      }
+      this.done = isDone;
+      this.doing = isDoing;
     },
     getTodos() {
       // axios.get(dataURL).then((response) => {
@@ -163,6 +184,7 @@ export default {
       if (localStorage.getItem('todos')) {
         try {
           this.todos = JSON.parse(localStorage.getItem('todos'));
+          this.updateStats();
         } catch (error) {
           localStorage.removeItem('todos');
         }
@@ -208,6 +230,7 @@ export default {
           this.addTodoForm.is_completed = false;
         }
       }
+
       const { isCompleted } = this.addTodoForm;
       const uid = uidNew;
       this.todos.push({
@@ -218,6 +241,7 @@ export default {
 
       this.confirmationMessage = `Задача "${description}" добавлена`;
       this.showConfirmation = true;
+      this.updateStats();
       this.saveToLocalStorage();
       this.resetForm();
     },
@@ -242,6 +266,7 @@ export default {
       const indexDelete = this.todos.findIndex(item => item.uid === todo.uid);
       this.todos.splice(indexDelete, 1);
       this.saveToLocalStorage();
+      this.updateStats();
     },
     onUpdateSubmit(event) {
       event.preventDefault();
@@ -260,6 +285,7 @@ export default {
       this.confirmationMessage = `Задача №${this.updateTodoForm.uid} обновлена`;
       this.showConfirmation = true;
       this.saveToLocalStorage();
+      this.updateStats();
     },
     onUpdateReset(event) {
       event.preventDefault();
